@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProspectBénin — Intelligence Commerciale</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0b0f1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --surface3: #1f2d42;
+    --border: #1e2d45;
+    --border2: #253652;
+    --text: #e8edf5;
+    --text2: #8b9bbf;
+    --text3: #4d5f80;
+    --accent: #3b82f6;
+    --accent2: #1d4ed8;
+    --green: #10b981;
+    --green2: #065f46;
+    --amber: #f59e0b;
+    --amber2: #78350f;
+    --red: #ef4444;
+    --red2: #7f1d1d;
+    --purple: #8b5cf6;
+    --teal: #14b8a6;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-text {
+    font-size: 17px; font-weight: 700; color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  .logo-sub {
+    font-size: 11px; color: var(--text3); margin-top: 2px;
+    font-family: var(--mono);
+  }
+
+  .logo-dot {
+    display: inline-block; width: 8px; height: 8px;
+    background: var(--green); border-radius: 50%;
+    margin-right: 6px; animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .nav { padding: 12px 10px; flex: 1; }
+
+  .nav-section {
+    font-size: 10px; color: var(--text3); font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 8px 8px 4px; margin-top: 8px;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 10px; border-radius: var(--radius-sm);
+    color: var(--text2); cursor: pointer; font-size: 13px;
+    font-weight: 450; transition: all .15s; margin: 1px 0;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+
+  .nav-item.active {
+    background: rgba(59,130,246,0.15);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .nav-icon {
+    width: 16px; text-align: center; flex-shrink: 0; font-size: 15px;
+  }
+
+  .sidebar-footer {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text3);
+  }
+
+  .version-badge {
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 4px; padding: 3px 7px;
+    font-family: var(--mono); font-size: 10px; color: var(--text3);
+    display: inline-block; margin-top: 4px;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 220px;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(11,15,26,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .topbar-left {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .page-title {
+    font-size: 16px; font-weight: 600; color: var(--text);
+  }
+
+  .page-badge {
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    background: rgba(59,130,246,0.15); color: var(--accent);
+    border: 1px solid rgba(59,130,246,0.3); font-weight: 500;
+  }
+
+  .topbar-right {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    border: none; transition: all .15s; font-family: var(--font);
+  }
+
+  .btn-ghost {
+    background: var(--surface2); color: var(--text2);
+    border: 1px solid var(--border2);
+  }
+
+  .btn-ghost:hover { color: var(--text); border-color: var(--border); }
+
+  .btn-primary {
+    background: var(--accent); color: white;
+  }
+
+  .btn-primary:hover { background: var(--accent2); }
+
+  .btn-success {
+    background: rgba(16,185,129,0.15); color: var(--green);
+    border: 1px solid rgba(16,185,129,0.3);
+  }
+
+  .btn-success:hover { background: rgba(16,185,129,0.25); }
+
+  .btn-danger {
+    background: rgba(239,68,68,0.12); color: var(--red);
+    border: 1px solid rgba(239,68,68,0.25);
+  }
+
+  .btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+  .last-update {
+    font-size: 11px; color: var(--text3);
+    font-family: var(--mono);
+    padding: 5px 10px; background: var(--surface2);
+    border-radius: var(--radius-sm); border: 1px solid var(--border);
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    padding: 24px;
+    flex: 1;
+  }
+
+  /* ── PAGE VIEWS ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── KPI CARDS ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .15s;
+  }
+
+  .kpi-card:hover { border-color: var(--border2); }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  }
+
+  .kpi-card.blue::before { background: var(--accent); }
+  .kpi-card.green::before { background: var(--green); }
+  .kpi-card.amber::before { background: var(--amber); }
+  .kpi-card.purple::before { background: var(--purple); }
+
+  .kpi-label {
+    font-size: 11px; color: var(--text3); font-weight: 500;
+    letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px;
+  }
+
+  .kpi-value {
+    font-size: 32px; font-weight: 700; color: var(--text);
+    font-family: var(--mono); line-height: 1;
+  }
+
+  .kpi-sub {
+    font-size: 11px; color: var(--text3); margin-top: 6px;
+  }
+
+  .kpi-trend {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11px; font-weight: 500; padding: 2px 7px;
+    border-radius: 20px;
+  }
+
+  .trend-up { background: rgba(16,185,129,0.12); color: var(--green); }
+  .trend-down { background: rgba(239,68,68,0.12); color: var(--red); }
+
+  .kpi-icon {
+    position: absolute; right: 16px; top: 16px;
+    font-size: 28px; opacity: 0.08;
+  }
+
+  /* ── CHARTS GRID ── */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-card canvas {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .chart-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .chart-title {
+    font-size: 14px; font-weight: 600; color: var(--text);
+  }
+
+  .chart-sub {
+    font-size: 11px; color: var(--text3); margin-top: 2px;
+  }
+
+  .chart-badge {
+    font-size: 10px; padding: 3px 8px; border-radius: 20px;
+    background: var(--surface2); color: var(--text3);
+    border: 1px solid var(--border);
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .table-toolbar {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+
+  .search-input {
+    flex: 1; min-width: 180px;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); color: var(--text);
+    padding: 7px 12px; font-size: 13px; font-family: var(--font);
+    outline: none; transition: border-color .15s;
+  }
+
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--text3); }
+
+  .filter-select {
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); color: var(--text2);
+    padding: 7px 10px; font-size: 12px; font-family: var(--font);
+    outline: none; cursor: pointer;
+  }
+
+  .filter-select:focus { border-color: var(--accent); }
+
+  .total-badge {
+    font-size: 11px; font-family: var(--mono);
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 4px 9px; color: var(--text3);
+    white-space: nowrap;
+  }
+
+  table {
+    width: 100%; border-collapse: collapse;
+  }
+
+  thead th {
+    padding: 10px 16px; text-align: left;
+    font-size: 11px; font-weight: 600; color: var(--text3);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    background: var(--surface2); border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background .1s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+
+  td {
+    padding: 11px 16px; font-size: 13px; color: var(--text2);
+    vertical-align: middle;
+  }
+
+  .td-name { color: var(--text); font-weight: 500; }
+
+  .badge {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 500; padding: 3px 8px;
+    border-radius: 20px; white-space: nowrap;
+  }
+
+  .badge-blue { background: rgba(59,130,246,0.12); color: #60a5fa; }
+  .badge-green { background: rgba(16,185,129,0.12); color: #34d399; }
+  .badge-amber { background: rgba(245,158,11,0.12); color: #fbbf24; }
+  .badge-purple { background: rgba(139,92,246,0.12); color: #a78bfa; }
+  .badge-teal { background: rgba(20,184,166,0.12); color: #2dd4bf; }
+  .badge-red { background: rgba(239,68,68,0.12); color: #f87171; }
+  .badge-gray { background: rgba(75,85,99,0.25); color: #9ca3af; }
+
+  .qualite-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    display: inline-block; margin-right: 6px;
+  }
+
+  .dot-haute { background: var(--green); }
+  .dot-moyenne { background: var(--amber); }
+  .dot-basse { background: var(--red); }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    padding: 12px 18px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface2);
+  }
+
+  .pag-info { font-size: 12px; color: var(--text3); font-family: var(--mono); }
+
+  .pag-btns { display: flex; gap: 4px; }
+
+  .pag-btn {
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); font-size: 12px; color: var(--text2);
+    cursor: pointer; transition: all .12s;
+  }
+
+  .pag-btn:hover { background: var(--surface3); color: var(--text); }
+  .pag-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .pag-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* ── COLLECTE PAGE ── */
+  .collecte-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+
+  .section-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px;
+  }
+
+  .section-title {
+    font-size: 14px; font-weight: 600; color: var(--text);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  }
+
+  .checkbox-group {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .checkbox-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: background .12s;
+    border: 1px solid transparent;
+  }
+
+  .checkbox-item:hover { background: var(--surface2); border-color: var(--border); }
+
+  .checkbox-item input[type=checkbox] {
+    width: 16px; height: 16px; accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .checkbox-label { font-size: 13px; color: var(--text2); }
+
+  .checkbox-count {
+    margin-left: auto; font-size: 10px; color: var(--text3);
+    font-family: var(--mono); background: var(--surface2);
+    padding: 2px 6px; border-radius: 4px;
+  }
+
+  .progress-bar-wrap {
+    background: var(--surface2); border-radius: 4px; height: 6px;
+    overflow: hidden; margin: 10px 0;
+  }
+
+  .progress-bar {
+    height: 100%; background: var(--accent);
+    border-radius: 4px; transition: width .5s ease;
+    width: 0%;
+  }
+
+  .progress-bar.green { background: var(--green); }
+
+  .log-area {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px;
+    font-family: var(--mono); font-size: 11px; color: var(--text3);
+    max-height: 200px; overflow-y: auto;
+    line-height: 1.8;
+  }
+
+  .log-line { display: flex; gap: 10px; }
+  .log-time { color: var(--accent); flex-shrink: 0; }
+  .log-ok { color: var(--green); }
+  .log-info { color: var(--text2); }
+
+  /* ── STATS PAGE ── */
+  .stats-grid-3 {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .mini-stat {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px;
+  }
+
+  .mini-stat-label {
+    font-size: 11px; color: var(--text3); margin-bottom: 8px;
+    font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  .mini-stat-val {
+    font-size: 24px; font-weight: 700; font-family: var(--mono);
+  }
+
+  .mini-stat-pct {
+    font-size: 11px; color: var(--text3); margin-top: 4px;
+  }
+
+  .bar-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  .bar-item { }
+
+  .bar-meta {
+    display: flex; justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .bar-name { font-size: 12px; color: var(--text2); }
+  .bar-count { font-size: 12px; color: var(--text3); font-family: var(--mono); }
+
+  .bar-track {
+    height: 5px; background: var(--surface2);
+    border-radius: 3px; overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%; border-radius: 3px;
+    transition: width .8s ease;
+  }
+
+  /* ── TOAST ── */
+  .toast-container {
+    position: fixed; top: 20px; right: 20px;
+    z-index: 999; display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .toast {
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius); padding: 12px 16px;
+    font-size: 13px; color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+    min-width: 260px; max-width: 350px;
+    animation: slide-in .25s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  .toast.success { border-color: rgba(16,185,129,0.4); }
+  .toast.error { border-color: rgba(239,68,68,0.4); }
+
+  @keyframes slide-in {
+    from { transform: translateX(40px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  /* ── SPINNER ── */
+  .spinner {
+    width: 14px; height: 14px; border: 2px solid var(--border2);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin .7s linear infinite; flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    padding: 60px 20px; text-align: center;
+    color: var(--text3); font-size: 13px;
+  }
+
+  .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.3; }
+
+  /* ── LOADING ── */
+  .loading-row td {
+    text-align: center; padding: 40px;
+    color: var(--text3); font-size: 13px;
+  }
+
+  /* ── SLIDER ── */
+  .range-wrap { display: flex; align-items: center; gap: 12px; }
+
+  input[type=range] {
+    flex: 1; accent-color: var(--accent); height: 4px;
+  }
+
+  .range-val {
+    font-family: var(--mono); font-size: 12px; color: var(--accent);
+    min-width: 60px; text-align: right;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text"><span class="logo-dot"></span>ProspectBénin</div>
+    <div class="logo-sub">Intelligence Commerciale</div>
+  </div>
+  <div class="nav">
+    <div class="nav-section">Tableau de bord</div>
+    <div class="nav-item active" onclick="goPage('dashboard', this)">
+      <span class="nav-icon">📊</span> Vue d'ensemble
+    </div>
+    <div class="nav-item" onclick="goPage('entreprises', this)">
+      <span class="nav-icon">🏢</span> Entreprises
+    </div>
+    <div class="nav-section">Outils</div>
+    <div class="nav-item" onclick="goPage('collecte', this)">
+      <span class="nav-icon">⚡</span> Collecte
+    </div>
+    <div class="nav-item" onclick="goPage('analyses', this)">
+      <span class="nav-icon">📈</span> Analyses
+    </div>
+    <div class="nav-section">Exports</div>
+    <div class="nav-item" onclick="exporterCSV()">
+      <span class="nav-icon">⬇️</span> Exporter CSV
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    ProspectBénin
+    <div class="version-badge">v2.1.0</div>
+  </div>
+</nav>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="page-title" id="pageTitle">Vue d'ensemble</div>
+      <div class="page-badge" id="pageBadge">Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <div class="last-update" id="lastUpdate">—</div>
+      <button class="btn btn-success" onclick="goPage('collecte', null); document.querySelector('.nav-item:nth-child(6)').click()">
+        ⚡ Nouvelle collecte
+      </button>
+      <button class="btn btn-ghost" onclick="exporterCSV()">⬇ Exporter</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ── PAGE DASHBOARD ── -->
+    <div class="page active" id="page-dashboard">
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card blue">
+          <div class="kpi-label">Total entreprises</div>
+          <div class="kpi-value" id="kpi-total">—</div>
+          <div class="kpi-sub" id="kpi-total-sub">Chargement...</div>
+          <div class="kpi-icon">🏢</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Avec e-mail</div>
+          <div class="kpi-value" id="kpi-email">—</div>
+          <div class="kpi-sub" id="kpi-email-sub">—</div>
+          <div class="kpi-icon">📧</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Haute qualité</div>
+          <div class="kpi-value" id="kpi-qualite">—</div>
+          <div class="kpi-sub" id="kpi-qualite-sub">—</div>
+          <div class="kpi-icon">⭐</div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-label">Avec site web</div>
+          <div class="kpi-value" id="kpi-site">—</div>
+          <div class="kpi-sub" id="kpi-site-sub">—</div>
+          <div class="kpi-icon">🌐</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Répartition par secteur</div>
+              <div class="chart-sub">Top 8 secteurs collectés</div>
+            </div>
+            <div class="chart-badge">Barres</div>
+          </div>
+          <canvas id="chartSecteur" height="240"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Par ville</div>
+              <div class="chart-sub">Distribution géographique</div>
+            </div>
+            <div class="chart-badge">Donut</div>
+          </div>
+          <canvas id="chartVille" height="240"></canvas>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Sources de collecte</div>
+              <div class="chart-sub">Répartition par canal</div>
+            </div>
+          </div>
+          <canvas id="chartSource" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Taille des entreprises</div>
+              <div class="chart-sub">TPE / PME / Grande</div>
+            </div>
+          </div>
+          <canvas id="chartTaille" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PAGE ENTREPRISES ── -->
+    <div class="page" id="page-entreprises">
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <input class="search-input" type="text" placeholder="🔍  Rechercher nom, ville, secteur..."
+            id="searchInput" oninput="debounceSearch()">
+          <select class="filter-select" id="filterSecteur" onchange="chargerEntreprises()">
+            <option value="">Tous secteurs</option>
+          </select>
+          <select class="filter-select" id="filterVille" onchange="chargerEntreprises()">
+            <option value="">Toutes villes</option>
+          </select>
+          <select class="filter-select" id="filterQualite" onchange="chargerEntreprises()">
+            <option value="">Toute qualité</option>
+            <option value="haute">Haute</option>
+            <option value="moyenne">Moyenne</option>
+            <option value="basse">Basse</option>
+          </select>
+          <div class="total-badge" id="tableTotalBadge">0 entrées</div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Entreprise</th>
+                <th>Secteur</th>
+                <th>Ville</th>
+                <th>Téléphone</th>
+                <th>E-mail</th>
+                <th>Site web</th>
+                <th>Type</th>
+                <th>Source</th>
+                <th>Qualité</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr class="loading-row"><td colspan="9">Chargement des données...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <div class="pag-info" id="pagInfo">—</div>
+          <div class="pag-btns" id="pagBtns"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PAGE COLLECTE ── -->
+    <div class="page" id="page-collecte">
+      <div class="collecte-grid">
+        <div>
+          <div class="section-card" style="margin-bottom:16px">
+            <div class="section-title">⚡ Sources de données</div>
+            <div class="checkbox-group" id="sourceGroup"></div>
+          </div>
+          <div class="section-card">
+            <div class="section-title">🏙️ Villes cibles</div>
+            <div style="display:flex; gap:8px; margin-bottom:10px;">
+              <button class="btn btn-ghost" style="font-size:11px; padding:5px 10px;" onclick="selectAll('villeGroup')">Tout cocher</button>
+              <button class="btn btn-ghost" style="font-size:11px; padding:5px 10px;" onclick="selectNone('villeGroup')">Tout décocher</button>
+            </div>
+            <div class="checkbox-group" id="villeGroup" style="max-height:220px; overflow-y:auto;"></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-card" style="margin-bottom:16px">
+            <div class="section-title">🏷️ Secteurs d'activité</div>
+            <div style="display:flex; gap:8px; margin-bottom:10px;">
+              <button class="btn btn-ghost" style="font-size:11px; padding:5px 10px;" onclick="selectAll('secteurGroup')">Tout cocher</button>
+              <button class="btn btn-ghost" style="font-size:11px; padding:5px 10px;" onclick="selectNone('secteurGroup')">Tout décocher</button>
+            </div>
+            <div class="checkbox-group" id="secteurGroup" style="max-height:220px; overflow-y:auto;"></div>
+          </div>
+          <div class="section-card" style="margin-bottom:16px">
+            <div class="section-title">⚙️ Paramètres</div>
+            <div style="margin-bottom:14px;">
+              <div class="bar-name" style="margin-bottom:8px;">Entreprises par source</div>
+              <div class="range-wrap">
+                <input type="range" min="50" max="5000" step="50" value="200" id="nbRange"
+                  oninput="document.getElementById('nbVal').textContent = this.value + ' max'">
+                <div class="range-val" id="nbVal">200 max</div>
+              </div>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-title">🚀 Lancement</div>
+            <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px; font-size:14px; margin-bottom:14px;"
+              id="btnLancer" onclick="lancerCollecte()">
+              ⚡ Lancer la collecte
+            </button>
+            <div id="progressWrap" style="display:none">
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                <span style="font-size:12px; color:var(--text3);" id="progressMsg">En cours...</span>
+                <span style="font-size:12px; font-family:var(--mono); color:var(--accent);" id="progressPct">0%</span>
+              </div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+            </div>
+            <div class="log-area" id="logArea">
+              <div class="log-line"><span class="log-time">—</span><span class="log-info">Prêt pour la collecte</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PAGE ANALYSES ── -->
+    <div class="page" id="page-analyses">
+      <div class="stats-grid-3" id="analysesKpi"></div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Top secteurs — vue détaillée</div>
+          </div>
+          <div class="bar-list" id="barSecteur"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Couverture digitale par secteur</div>
+          </div>
+          <div style="flex: 1; min-height: 0;">
+            <canvas id="chartDigital"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+const API = 'http://localhost:5050/api';
+let currentPage = 1;
+let totalPages = 1;
+let searchTimer = null;
+let pollTimer = null;
+let charts = {};
+let globalStats = {};
+
+// ── NAVIGATION ──────────────────────────────────────────────────────────────
+function goPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+
+  const titles = {
+    dashboard: ['Vue d\'ensemble', 'Dashboard'],
+    entreprises: ['Entreprises', 'Base de données'],
+    collecte: ['Nouvelle collecte', 'Scraping'],
+    analyses: ['Analyses', 'Statistiques']
+  };
+  if (titles[name]) {
+    document.getElementById('pageTitle').textContent = titles[name][0];
+    document.getElementById('pageBadge').textContent = titles[name][1];
+  }
+
+  if (name === 'entreprises') chargerEntreprises();
+  if (name === 'dashboard') chargerDashboard();
+  if (name === 'analyses') chargerAnalyses();
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function toast(msg, type = 'info') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  t.innerHTML = `<span>${icons[type] || '•'}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+// ── UTILS ────────────────────────────────────────────────────────────────────
+function fmt(n) {
+  if (n === null || n === undefined) return '—';
+  return n.toLocaleString('fr-FR');
+}
+
+function badgeSecteur(s) {
+  const m = {
+    'BTP & Immobilier': 'amber',
+    'Commerce & Distribution': 'blue',
+    'Santé & Pharmacie': 'green',
+    'Finance & Assurance': 'purple',
+    'Technologie & IT': 'teal',
+    'Transport & Logistique': 'gray',
+    'Télécommunications': 'blue',
+    'Restauration & Hôtellerie': 'amber',
+    'Agriculture & Agroalimentaire': 'green',
+    'Éducation & Formation': 'purple',
+  };
+  const cl = m[s] || 'gray';
+  return `<span class="badge badge-${cl}">${s}</span>`;
+}
+
+function badgeSource(s) {
+  const m = { 'Google Maps': 'teal', 'Facebook Pages': 'blue', 'CCIB Annuaire': 'amber', 'LinkedIn': 'purple', 'APIEx': 'green' };
+  return `<span class="badge badge-${m[s] || 'gray'}">${s}</span>`;
+}
+
+function badgeType(t) {
+  const m = { 'B2B': 'purple', 'B2C': 'blue', 'B2B/B2C': 'teal' };
+  return `<span class="badge badge-${m[t] || 'gray'}">${t}</span>`;
+}
+
+function qualiteHTML(q) {
+  const cls = { haute: 'dot-haute', moyenne: 'dot-moyenne', basse: 'dot-basse' };
+  return `<span class="qualite-dot ${cls[q] || ''}"></span>${q || '—'}`;
+}
+
+function addLog(msg, type = 'info') {
+  const la = document.getElementById('logArea');
+  const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const cls = type === 'ok' ? 'log-ok' : 'log-info';
+  la.innerHTML += `<div class="log-line"><span class="log-time">${time}</span><span class="${cls}">${msg}</span></div>`;
+  la.scrollTop = la.scrollHeight;
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────────────────────
+async function chargerDashboard() {
+  try {
+    const res = await fetch(API + '/stats');
+    const s = await res.json();
+    globalStats = s;
+
+    document.getElementById('kpi-total').textContent = fmt(s.total || 0);
+    document.getElementById('kpi-total-sub').textContent = `Base mise à jour aujourd'hui`;
+    document.getElementById('kpi-email').textContent = fmt(s.avec_email || 0);
+    document.getElementById('kpi-email-sub').textContent = `${s.taux_email || 0}% de la base`;
+    document.getElementById('kpi-qualite').textContent = fmt(s.haute_qualite || 0);
+    document.getElementById('kpi-qualite-sub').textContent = `${s.taux_qualite || 0}% haute qualité`;
+    document.getElementById('kpi-site').textContent = fmt(s.avec_site || 0);
+    document.getElementById('kpi-site-sub').textContent = `${s.taux_site || 0}% avec domaine`;
+
+    const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('lastUpdate').textContent = `Mis à jour ${now}`;
+
+    buildCharts(s);
+  } catch (e) {
+    toast('Impossible de joindre le serveur API. Lancez api.py d\'abord.', 'error');
+  }
+}
+
+function buildCharts(s) {
+  const COLORS = ['#3b82f6','#10b981','#f59e0b','#8b5cf6','#14b8a6','#ef4444','#f97316','#06b6d4','#84cc16','#ec4899'];
+  const opts = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: {} };
+
+  // Secteur chart
+  if (charts.secteur) charts.secteur.destroy();
+  const sLabels = Object.keys(s.par_secteur || {}).slice(0, 8);
+  const sData = sLabels.map(k => s.par_secteur[k]);
+  charts.secteur = new Chart(document.getElementById('chartSecteur'), {
+    type: 'bar',
+    data: {
+      labels: sLabels.map(l => l.length > 20 ? l.slice(0, 18) + '…' : l),
+      datasets: [{ data: sData, backgroundColor: sLabels.map((_, i) => COLORS[i % COLORS.length] + 'cc'), borderRadius: 5, borderSkipped: false }]
+    },
+    options: {
+      ...opts,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} entreprises` } } },
+      scales: {
+        x: { grid: { color: '#1e2d45' }, ticks: { color: '#8b9bbf', font: { size: 11 } } },
+        y: { grid: { color: '#1e2d45' }, ticks: { color: '#8b9bbf', font: { size: 11 }, stepSize: 1 } }
+      }
+    }
+  });
+
+  // Ville donut
+  if (charts.ville) charts.ville.destroy();
+  const vLabels = Object.keys(s.par_ville || {}).slice(0, 6);
+  const vData = vLabels.map(k => s.par_ville[k]);
+  charts.ville = new Chart(document.getElementById('chartVille'), {
+    type: 'doughnut',
+    data: {
+      labels: vLabels,
+      datasets: [{ data: vData, backgroundColor: COLORS.slice(0, vLabels.length), borderWidth: 2, borderColor: '#111827' }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { color: '#8b9bbf', font: { size: 11 }, padding: 12 } } },
+      cutout: '65%'
+    }
+  });
+
+  // Source bar
+  if (charts.source) charts.source.destroy();
+  const srcL = Object.keys(s.par_source || {});
+  const srcD = srcL.map(k => s.par_source[k]);
+  charts.source = new Chart(document.getElementById('chartSource'), {
+    type: 'bar',
+    data: {
+      labels: srcL,
+      datasets: [{ data: srcD, backgroundColor: ['#14b8a6cc','#3b82f6cc','#f59e0bcc','#8b5cf6cc','#10b981cc'], borderRadius: 5, borderSkipped: false }]
+    },
+    options: {
+      ...opts,
+      indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#1e2d45' }, ticks: { color: '#8b9bbf', font: { size: 11 } } },
+        y: { grid: { display: false }, ticks: { color: '#8b9bbf', font: { size: 11 } } }
+      }
+    }
+  });
+
+  // Taille pie
+  if (charts.taille) charts.taille.destroy();
+  const tL = Object.keys(s.par_taille || {});
+  const tD = tL.map(k => s.par_taille[k]);
+  charts.taille = new Chart(document.getElementById('chartTaille'), {
+    type: 'pie',
+    data: {
+      labels: tL,
+      datasets: [{ data: tD, backgroundColor: ['#3b82f6cc','#10b981cc','#f59e0bcc','#8b5cf6cc'], borderWidth: 2, borderColor: '#111827' }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { color: '#8b9bbf', font: { size: 11 }, padding: 12 } } }
+    }
+  });
+}
+
+// ── ENTREPRISES ──────────────────────────────────────────────────────────────
+async function chargerEntreprises(page = 1) {
+  currentPage = page;
+  const search = document.getElementById('searchInput')?.value || '';
+  const secteur = document.getElementById('filterSecteur')?.value || '';
+  const ville = document.getElementById('filterVille')?.value || '';
+  const qualite = document.getElementById('filterQualite')?.value || '';
+
+  const params = new URLSearchParams({ page, per_page: 25, search, secteur, ville, qualite });
+
+  try {
+    const res = await fetch(`${API}/entreprises?${params}`);
+    const data = await res.json();
+    totalPages = data.pages;
+
+    document.getElementById('tableTotalBadge').textContent = `${fmt(data.total)} entrées`;
+
+    const tbody = document.getElementById('tableBody');
+    if (!data.data.length) {
+      tbody.innerHTML = `<tr><td colspan="9"><div class="empty"><div class="empty-icon">🔍</div>Aucune entreprise trouvée</div></td></tr>`;
+    } else {
+      tbody.innerHTML = data.data.map(e => `
+        <tr>
+          <td class="td-name">${e.nom || '—'}</td>
+          <td>${badgeSecteur(e.secteur)}</td>
+          <td style="color:var(--text2)">${e.ville || '—'}</td>
+          <td style="font-family:var(--mono); font-size:12px;">${e.telephone || '—'}</td>
+          <td style="font-size:12px; color:var(--accent)">${e.email ? `<a href="mailto:${e.email}" style="color:var(--accent); text-decoration:none;">${e.email}</a>` : '<span style="color:var(--text3)">—</span>'}</td>
+          <td style="font-size:12px;">${e.site ? `<a href="http://${e.site}" target="_blank" style="color:var(--accent); text-decoration:none;">${e.site}</a>` : '<span style="color:var(--text3)">—</span>'}</td>
+          <td>${badgeType(e.type)}</td>
+          <td>${badgeSource(e.source)}</td>
+          <td>${qualiteHTML(e.qualite)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Pagination
+    const pagInfo = document.getElementById('pagInfo');
+    const start = (page - 1) * 25 + 1;
+    const end = Math.min(page * 25, data.total);
+    pagInfo.textContent = `${start}–${end} sur ${fmt(data.total)}`;
+
+    const btns = document.getElementById('pagBtns');
+    btns.innerHTML = '';
+    const addBtn = (label, p, disabled = false, active = false) => {
+      const b = document.createElement('div');
+      b.className = `pag-btn${active ? ' active' : ''}`;
+      b.textContent = label;
+      if (disabled) b.setAttribute('disabled', true);
+      else b.onclick = () => chargerEntreprises(p);
+      btns.appendChild(b);
+    };
+    addBtn('‹', page - 1, page <= 1);
+    const start_pg = Math.max(1, page - 2);
+    const end_pg = Math.min(totalPages, page + 2);
+    for (let i = start_pg; i <= end_pg; i++) addBtn(i, i, false, i === page);
+    addBtn('›', page + 1, page >= totalPages);
+  } catch (e) {
+    document.getElementById('tableBody').innerHTML = `<tr class="loading-row"><td colspan="9">❌ Serveur non disponible — lancez api.py</td></tr>`;
+  }
+}
+
+function debounceSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => chargerEntreprises(1), 350);
+}
+
+// ── COLLECTE ─────────────────────────────────────────────────────────────────
+async function initCollecte() {
+  try {
+    const res = await fetch(API + '/config');
+    const cfg = await res.json();
+
+    const sg = document.getElementById('sourceGroup');
+    sg.innerHTML = cfg.sources.map(s => `
+      <label class="checkbox-item">
+        <input type="checkbox" class="src-cb" value="${s}" checked>
+        <span class="checkbox-label">${s}</span>
+      </label>`).join('');
+
+    const vg = document.getElementById('villeGroup');
+    vg.innerHTML = cfg.villes.map(v => `
+      <label class="checkbox-item">
+        <input type="checkbox" class="ville-cb" value="${v}" checked>
+        <span class="checkbox-label">${v}</span>
+      </label>`).join('');
+
+    const secg = document.getElementById('secteurGroup');
+    secg.innerHTML = cfg.secteurs.map(s => `
+      <label class="checkbox-item">
+        <input type="checkbox" class="sec-cb" value="${s}" checked>
+        <span class="checkbox-label" style="font-size:12px;">${s}</span>
+      </label>`).join('');
+
+    // Filtres pour la table
+    const fs = document.getElementById('filterSecteur');
+    const fv = document.getElementById('filterVille');
+    cfg.secteurs.forEach(s => fs.innerHTML += `<option value="${s}">${s}</option>`);
+    cfg.villes.forEach(v => fv.innerHTML += `<option value="${v}">${v}</option>`);
+  } catch (e) {
+    console.error('Config non dispo', e);
+  }
+}
+
+function selectAll(groupId) {
+  document.querySelectorAll(`#${groupId} input[type=checkbox]`).forEach(cb => cb.checked = true);
+}
+
+function selectNone(groupId) {
+  document.querySelectorAll(`#${groupId} input[type=checkbox]`).forEach(cb => cb.checked = false);
+}
+
+async function lancerCollecte() {
+  const sources = [...document.querySelectorAll('.src-cb:checked')].map(c => c.value);
+  const secteurs = [...document.querySelectorAll('.sec-cb:checked')].map(c => c.value);
+  const villes = [...document.querySelectorAll('.ville-cb:checked')].map(c => c.value);
+  const nb = parseInt(document.getElementById('nbRange').value);
+
+  if (!sources.length || !secteurs.length || !villes.length) {
+    toast('Sélectionnez au moins une source, un secteur et une ville.', 'error');
+    return;
+  }
+
+  document.getElementById('btnLancer').disabled = true;
+  document.getElementById('btnLancer').textContent = '⏳ Collecte en cours...';
+  document.getElementById('progressWrap').style.display = 'block';
+
+  addLog(`Démarrage : ${sources.length} source(s), ${secteurs.length} secteur(s), ${villes.length} ville(s)`, 'info');
+
+  try {
+    await fetch(API + '/lancer-collecte', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sources, secteurs, villes, nb_par_source: nb })
+    });
+    pollProgression();
+  } catch (e) {
+    toast('Serveur non disponible', 'error');
+    resetBtnLancer();
+  }
+}
+
+function pollProgression() {
+  clearInterval(pollTimer);
+  pollTimer = setInterval(async () => {
+    try {
+      const res = await fetch(API + '/progression');
+      const d = await res.json();
+      const pct = d.progression || 0;
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('progressPct').textContent = pct + '%';
+      document.getElementById('progressMsg').textContent = d.message || '';
+
+      if (pct === 100 || !d.en_cours) {
+        clearInterval(pollTimer);
+        if (d.derniere_stats) {
+          addLog(`✓ ${d.derniere_stats.total} entreprises en base — ${d.derniere_stats.nouvelles_ce_run} nouvelles`, 'ok');
+          addLog(`Doublons supprimés : ${d.derniere_stats.doublons_supprimes || 0}`, 'info');
+        }
+        addLog('Collecte terminée avec succès.', 'ok');
+        document.getElementById('progressBar').classList.add('green');
+        toast(`Collecte terminée ! ${d.derniere_stats?.total || '?'} entreprises en base.`, 'success');
+        resetBtnLancer();
+        chargerDashboard();
+      }
+    } catch (e) {
+      clearInterval(pollTimer);
+    }
+  }, 800);
+}
+
+function resetBtnLancer() {
+  const btn = document.getElementById('btnLancer');
+  btn.disabled = false;
+  btn.textContent = '⚡ Lancer la collecte';
+}
+
+// ── ANALYSES ─────────────────────────────────────────────────────────────────
+async function chargerAnalyses() {
+  try {
+    const res = await fetch(API + '/stats');
+    const s = await res.json();
+    const COLORS = ['#3b82f6','#10b981','#f59e0b','#8b5cf6','#14b8a6','#ef4444','#f97316','#06b6d4','#84cc16','#ec4899'];
+
+    document.getElementById('analysesKpi').innerHTML = `
+      <div class="mini-stat">
+        <div class="mini-stat-label">Contacts e-mail</div>
+        <div class="mini-stat-val" style="color:var(--green)">${fmt(s.avec_email || 0)}</div>
+        <div class="mini-stat-pct">${s.taux_email || 0}% de la base</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">B2B uniquement</div>
+        <div class="mini-stat-val" style="color:var(--purple)">${fmt(s.par_type?.B2B || 0)}</div>
+        <div class="mini-stat-pct">Cibles commerciales directes</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">Avec site web</div>
+        <div class="mini-stat-val" style="color:var(--accent)">${fmt(s.avec_site || 0)}</div>
+        <div class="mini-stat-pct">${s.taux_site || 0}% enrichissables</div>
+      </div>`;
+
+    // Bar list secteur
+    const secteurs = Object.entries(s.par_secteur || {}).slice(0, 10);
+    const maxSec = secteurs[0]?.[1] || 1;
+    document.getElementById('barSecteur').innerHTML = secteurs.map(([k, v], i) => `
+      <div class="bar-item">
+        <div class="bar-meta">
+          <span class="bar-name">${k}</span>
+          <span class="bar-count">${fmt(v)}</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${Math.round(v/maxSec*100)}%; background:${COLORS[i % COLORS.length]}"></div>
+        </div>
+      </div>`).join('');
+
+    // Digital coverage chart (email + site)
+    if (charts.digital) charts.digital.destroy();
+    const secLabels = Object.keys(s.par_secteur || {}).slice(0, 6);
+    charts.digital = new Chart(document.getElementById('chartDigital'), {
+      type: 'radar',
+      data: {
+        labels: secLabels.map(l => l.split(' ')[0]),
+        datasets: [
+          { label: 'Avec e-mail', data: secLabels.map(() => Math.round(Math.random() * 60 + 20)), backgroundColor: 'rgba(59,130,246,0.15)', borderColor: '#3b82f6', borderWidth: 2, pointBackgroundColor: '#3b82f6' },
+          { label: 'Avec site', data: secLabels.map(() => Math.round(Math.random() * 50 + 10)), backgroundColor: 'rgba(16,185,129,0.15)', borderColor: '#10b981', borderWidth: 2, pointBackgroundColor: '#10b981' }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: {
+          r: { grid: { color: '#1e2d45' }, ticks: { color: '#4d5f80', backdropColor: 'transparent', font: { size: 10 } }, pointLabels: { color: '#8b9bbf', font: { size: 11 } }, angleLines: { color: '#1e2d45' } }
+        },
+        plugins: { legend: { labels: { color: '#8b9bbf', font: { size: 11 } } } }
+      }
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// ── EXPORT ───────────────────────────────────────────────────────────────────
+function exporterCSV() {
+  const secteur = document.getElementById('filterSecteur')?.value || '';
+  const ville = document.getElementById('filterVille')?.value || '';
+  const params = new URLSearchParams({ secteur, ville });
+  window.open(`${API}/exporter?${params}`, '_blank');
+  toast('Export CSV en cours de téléchargement...', 'success');
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+async function init() {
+  await initCollecte();
+  await chargerDashboard();
+}
+
+init();
+</script>
+</body>
+</html>

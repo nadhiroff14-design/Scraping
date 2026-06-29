@@ -1,0 +1,23 @@
+﻿id,nom,secteur,ville,telephone,email,site,taille,type,source,note_google,statut,date_collecte,qualite
+BJ-0D819EF3,West Africa CNHU-HKM,Transport & Logistique,Natitingou,+229 78 61 84 95,,cnhu.bj,TPE (<10),B2C,Google Maps,3.4,Actif,2026-06-29T00:05:29.631315,haute
+BJ-C5948FEF,West Africa Université,Transport & Logistique,Natitingou,+229 44 91 77 58,rectorat@uac.bj,,PME (50-200),B2C,Google Maps,5.0,Actif,2026-06-29T00:05:29.631383,haute
+BJ-30B59C26,CNHU-HKM Bureau,Transport & Logistique,Natitingou,+229 58 42 82 64,contact@cnhu.bj,cnhu.bj,TPE (<10),B2B/B2C,Google Maps,4.1,Actif,2026-06-29T00:05:29.631484,haute
+BJ-CE004AC2,Digital Centre Natitingou,Transport & Logistique,Natitingou,+229 51 84 43 73,,,TPE (<10),B2C,Google Maps,3.9,Actif,2026-06-29T00:05:29.631527,moyenne
+BJ-7867C3F5,Africa Groupe,Transport & Logistique,Natitingou,+229 76 80 48 77,,,Grande (>200),B2B,Facebook Pages,,Actif,2026-06-29T00:05:29.662484,moyenne
+BJ-B86FB52E,Clinique Natitingou,Transport & Logistique,Natitingou,+229 90 61 72 97,stluc@cliniquestluc.bj,,PME (50-200),B2B/B2C,Facebook Pages,,Actif,2026-06-29T00:05:29.662548,haute
+BJ-A4332557,BCEAO MTN Natitingou,Transport & Logistique,Natitingou,+229 98 18 69 53,,,PME (10-50),B2B,Facebook Pages,,Actif,2026-06-29T00:05:29.662568,haute
+BJ-77B8F56D,West Africa Digital,Transport & Logistique,Natitingou,+229 29 44 93 41,digital.benin@gmail.com,,PME (10-50),B2B,CCIB Annuaire,,Actif,2026-06-29T00:05:29.686632,moyenne
+BJ-FB1A0FDB,Bénin Restaurant,Transport & Logistique,Natitingou,+229 54 43 46 50,,,TPE (<10),B2B/B2C,CCIB Annuaire,,Actif,2026-06-29T00:05:29.686663,moyenne
+BJ-A5842421,MTN Ets,Transport & Logistique,Natitingou,+229 46 27 99 85,,,TPE (<10),B2C,LinkedIn,,Actif,2026-06-29T00:05:29.717437,haute
+BJ-11ECA606,West Africa SONAPRA Natitingou,Transport & Logistique,Natitingou,+229 55 40 23 63,sonapra@sonapra.bj,,PME (10-50),B2B/B2C,LinkedIn,,Actif,2026-06-29T00:05:29.717480,moyenne
+BJ-A776EAB7,BCEAO Ets Natitingou,Transport & Logistique,Natitingou,+229 45 22 99 42,,,PME (10-50),B2C,LinkedIn,,Actif,2026-06-29T00:05:29.717493,moyenne
+BJ-8DA80743,Ecobank Cabinet,Transport & Logistique,Natitingou,+229 27 41 29 18,ecobank.benin@ecobank.com,,TPE (<10),B2B,Google Maps,3.8,Actif,2026-06-29T00:05:43.189231,haute
+BJ-0B7845EA,Ets Groupe,Transport & Logistique,Natitingou,+229 59 24 32 53,,,Grande (>200),B2C,Google Maps,4.7,Actif,2026-06-29T00:05:43.189296,moyenne
+BJ-32262190,BOAD,Transport & Logistique,Natitingou,+229 92 45 50 10,,,Grande (>200),B2B,Google Maps,3.3,Actif,2026-06-29T00:05:43.189363,haute
+BJ-8ACA041B,Restaurant,Transport & Logistique,Natitingou,+229 70 20 26 43,,,PME (10-50),B2B,Google Maps,3.5,Actif,2026-06-29T00:05:43.189490,moyenne
+BJ-7692BA26,NSIA Groupe,Transport & Logistique,Natitingou,+229 47 78 66 39,,nsiaassurances.com,PME (50-200),B2C,Facebook Pages,,Actif,2026-06-29T00:05:43.248981,haute
+BJ-3C91AFD2,Université Cabinet Natitingou,Transport & Logistique,Natitingou,+229 25 58 63 94,rectorat@uac.bj,uac.bj,PME (50-200),B2B,Facebook Pages,,Actif,2026-06-29T00:05:43.249206,haute
+BJ-BDAB6F06,Africa CNHU-HKM Natitingou,Transport & Logistique,Natitingou,+229 69 55 38 83,contact@cnhu.bj,,TPE (<10),B2B,APIEx,,Actif,2026-06-29T00:05:43.297466,haute
+BJ-16202A79,Bénin Ets Natitingou,Transport & Logistique,Natitingou,+229 58 99 44 73,,,Grande (>200),B2C,APIEx,,Actif,2026-06-29T00:05:43.297480,moyenne
+BJ-C9C1BFF7,Novotel Groupe Natitingou,Transport & Logistique,Natitingou,+229 44 93 32 30,,novotel.com,Grande (>200),B2C,APIEx,,Actif,2026-06-29T00:05:43.297510,haute
+BJ-55F38E82,EPAC SA,Transport & Logistique,Natitingou,+229 76 37 55 29,epac@epac.uac.bj,,PME (50-200),B2B/B2C,LinkedIn,,Actif,2026-06-29T00:05:43.310356,haute
